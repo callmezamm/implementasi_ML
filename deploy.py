@@ -38,7 +38,7 @@ import joblib
 from joblib import load
 
 
-st.header('Implementasi', divider='rainbow')
+st.header('Implementasi')
 inputan = st.text_area("Masukkan Berita")
 inputan = [inputan]
 # ======================== TF-IDF ==========================
