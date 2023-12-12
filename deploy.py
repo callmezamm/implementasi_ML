@@ -1,4 +1,5 @@
 import streamlit as st
+from streamlit_option_menu import option_menu
 import joblib
 
 # crawling
@@ -37,19 +38,51 @@ import matplotlib.pyplot as plt
 import joblib 
 from joblib import load
 
+nltk.download('stopwords')
+nltk.download('punkt')
+warnings.filterwarnings('ignore')
 
-st.header('Implementasi')
-inputan = st.text_area("Masukkan Berita")
-inputan = [inputan]
-# ======================== TF-IDF ==========================
-vertorizer = load('tf_idf_Vectorizer.pkl')
-# ======================== LDA =============================
-lda = load('best_lda4.pkl')
-# ======================== MODEL ===========================
-model = load('best_model4_dc.pkl')
+with st.sidebar:
+    selected = option_menu(
+        menu_title= "Main Menu",
+        options=["Home","Project"]
+    )
+if selected == "Home":
+    st.header('PROJECT MACHINE LEARNING', divider='rainbow')
+    st.write('Pada project ini akan membahas tentang proses crawling web Indo Times, melakukan normalisasi data abstrak, pemrposesan LDA untuk reduksi dimensi dan membuat model klasifikasi menggunakan DecisionTree')
 
-if st.button("Prediksi"):
-    ver_inp = vertorizer.transform(inputan)
-    lda_inp = lda.transform(ver_inp)
-    model_inp = model.predict(lda_inp)
-    st.write(model_inp)
+    st.write("## **Crawling**")
+    st.write("Crawling data adalah proses otomatis pengumpulan informasi atau data dari berbagai sumber di internet menggunakan program komputer atau robot yang disebut web crawler atau spider. Tujuan utama dari proses crawling data adalah untuk mengumpulkan informasi secara terstruktur dari berbagai situs web, mengindeksnya, dan membuatnya tersedia untuk analisis lebih lanjut, penelitian, atau penggunaan lainnya")
+    st.write("## **Normalisasi**")
+    st.write("Normalisasi data adalah proses pengelompokan atau penyesuaian data dalam suatu dataset sehingga mereka berada dalam rentang atau skala tertentu. Tujuan normalisasi adalah untuk memastikan bahwa data-data tersebut dapat dibandingkan atau digunakan dalam analisis tanpa ada bias yang muncul karena perbedaan dalam besaran atau satuan pengukuran.")
+    st.write("## **Reduksi Dimensi LDA**")
+    st.write("Reduksi dimensi dengan LDA (Linear Discriminant Analysis) adalah teknik analisis yang digunakan untuk mengurangi dimensi data dengan mempertimbangkan informasi diskriminatif antar kelas. LDA adalah metode yang umumnya digunakan dalam pengenalan pola dan klasifikasi, terutama dalam konteks pengolahan data dengan masalah klasifikasi.")
+if selected == "Project":
+    st.title("IMPLEMENTASI")
+
+    st.header("Implementasi klasifikasi berita")
+    inputan = st.text_area("Masukkan Berita")
+    inputan = [inputan]
+    # ======================== TF-IDF ==========================
+    vertorizer = load('tf_idf_Vectorizer.pkl')
+    # ======================== LDA =============================
+    lda = load('best_lda4.pkl')
+    # ======================== MODEL ===========================
+    model = load('best_model4_dc.pkl')
+
+
+    if st.button("Prediksi"):
+        ver_inp = vertorizer.transform(inputan)
+        # st.write(ver_inp)
+        lda_inp = lda.transform(ver_inp)
+        predict_inp = model.predict(lda_inp)
+        if predict_inp == "Politik":
+            st.success("Hasil Prediksi dari Kalimat yang diinputkan menunjukkan : ")
+            st.success("Politik")
+        elif predict_inp == "Hiburan":
+            st.success("Hasil Prediksi dari Kalimat yang diinputkan menunjukkan : ")
+            st.success("Hiburan")
+        else:
+            st.success("Hasil Prediksi dari Kalimat yang diinputkan menunjukkan : ")
+            st.success("Olahraga")
+        
